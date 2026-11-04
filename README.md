@@ -1,7 +1,6 @@
-# GENAI LAB — TP 2 : CONSTRUIRE UNE IA GÉNÉRATIVE PAS À PAS
-**Licence 3 Génie Logiciel — ISIG GOMA (Année académique 2026-2027)**  
-*Enseignant : Blaise CIZA*  
-*Variante : Génie Logiciel (FastAPI, Interface Web, 20 Tests Automatiques, Journal des requêtes)*
+# GENAI LAB  : CONSTRUIRE UNE IA GÉNÉRATIVE PAS À PAS
+**Licence 3 Génie Logiciel   
+(FastAPI, Interface Web, 20 Tests Automatiques, Journal des requêtes)*
 
 ---
 
