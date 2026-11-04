@@ -1,0 +1,20 @@
+# SPÉCIFICATION TECHNIQUE DE L'API REST GESTION ÉTUDIANTS
+Version 2.4 — Architecture Microservices ISIG
+
+1. DESCRIPTION GÉNÉRALE DU SERVICE
+L'API REST Gestion Étudiants centralise les opérations d'inscription, de suivi pédagogique, de délibération et de délivrance des relevés de notes. Elle est exposée à l'adresse sécurisée https://api.isig.ac.cd/v2 et respecte scrupuleusement les principes architecturaux RESTful avec typage Pydantic.
+
+2. AUTHENTIFICATION ET SÉCURITÉ DES ACCÈS
+Tous les points d'entrée de l'API requièrent une authentification par jeton JWT transmis au sein de l'en-tête HTTP 'Authorization' avec le préfixe 'Bearer'. La durée de validité d'un jeton d'accès est fixée à soixante minutes. Au-delà, le client doit présenter son jeton de rafraîchissement dont la validité est de quatorze jours. L'accès aux données des étudiants est soumis à un contrôle basé sur les rôles : administrateur, enseignant et étudiant.
+
+3. GESTION DES QUOTAS ET LIMITATION DE DÉBIT
+Afin de préserver l'infrastructure contre les attaques par déni de service et les requêtes abusives, un limiteur de débit applique un plafond strict de cent requêtes par minute et par adresse IP pour les utilisateurs non authentifiés, et de mille requêtes par minute pour les partenaires académiques disposant d'une clé d'API dédiée. Tout dépassement retourne le code de statut HTTP 429 Too Many Requests.
+
+4. DESCRIPTION DÉTAILLÉE DES ROUTES PRINCIPALES
+- GET /etudiants : retourne la liste paginée des étudiants inscrits. Accepte les paramètres de requête 'page' (défaut 1), 'limit' (maximum 50) et 'filiere'.
+- POST /etudiants : enregistre un nouvel étudiant dans la base. Le corps de la requête doit respecter le schéma JSON comportant matricule, nom, prénom, filière et niveau d'études. En cas de succès, l'API renvoie le code HTTP 201 Created avec l'en-tête Location.
+- GET /etudiants/{matricule}/releve : génère le relevé de notes au format JSON pour l'année académique courante. Code 200 OK en cas de succès, 404 Not Found si le matricule est inexistant.
+- DELETE /etudiants/{matricule} : désactive le compte étudiant sans suppression physique de la base pour des raisons d'archivage réglementaire.
+
+5. FORMAT DES RÉPONSES ET GESTION DES ANOMALIES
+Toutes les réponses de l'API sont encodées en UTF-8 et structurées selon le standard JSON. En situation d'erreur, le serveur retourne systématiquement un objet JSON normalisé contenant trois propriétés : un code d'erreur textuel, un message descriptif destiné au développeur et un horodatage ISO 8601.

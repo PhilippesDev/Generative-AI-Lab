@@ -1,0 +1,20 @@
+# PROCÉDURE DE DÉPLOIEMENT CONTINU ET BONNES PRATIQUES DEVOPS
+Direction des Systèmes d'Information — Document Technique Interne
+
+1. INTRODUCTION ET OBJECTIFS OPÉRATIONNELS
+Le présent guide standardise l'ensemble des procédures d'intégration et de déploiement continus applicables à nos applications hébergées. Il garantit une cadence de livraison rapide tout en maintenant une stabilité optimale des services en production.
+
+2. GESTION DES BRANCHES SOUS GIT
+Nous appliquons strictement la méthodologie Gitflow allégée. La branche 'main' reflète en permanence l'état déployé en environnement de production. La branche 'develop' centralise l'intégration quotidienne des fonctionnalités validées. Toute nouvelle tâche donne lieu à la création d'une branche préfixée 'feature/' issue de 'develop'. Avant toute fusion vers 'develop', une pull request doit obligatoirement obtenir l'approbation formelle de deux relecteurs pairs et satisfaire la totalité des tests unitaires du pipeline.
+
+3. STRATÉGIE DE CONTENEURISATION DOCKER
+Toutes les applications logicielles doivent être empaquetées sous forme d'images de conteneurs Docker légères basées sur Alpine Linux ou Debian Slim. Les Dockerfiles doivent appliquer le principe de construction multi-étapes pour minimiser la taille de l'artefact final et restreindre la surface d'attaque. Il est formellement interdit d'exécuter un conteneur avec les privilèges de l'utilisateur root en environnement de production.
+
+4. AUTOMATISATION DES TESTS ET QUALITÉ DE CODE
+Le pipeline d'intégration continue exécute automatiquement les étapes suivantes à chaque soumission de code : linter flake8 pour la conformité syntaxique, analyseur statique ruff, exécution des tests unitaires et fonctionnels avec pytest, et calcul de la couverture de test. Un seuil minimal de 80 pour cent de couverture des instructions est exigé pour autoriser le déploiement.
+
+5. STRATÉGIE DE DÉPLOIEMENT ET RETOUR ARRIÈRE
+Les déploiements sur les clusters Kubernetes de production utilisent exclusivement la stratégie de mise à jour progressive ou blue-green. Cette approche garantit une disponibilité de service sans aucune interruption pour l'utilisateur final. En cas de dysfonctionnement critique constaté par les sondes de santé, un mécanisme de rollback automatisé restaure la version précédente sous un délai maximal de quatre-vingt-dix secondes.
+
+6. OBSERVABILITÉ, TRACES ET GESTION DES ALERTES
+La supervision de nos services repose sur la collecte centralisée des métriques avec Prometheus et la visualisation des tableaux de bord sur Grafana. Les journaux d'événements doivent obligatoirement être sérialisés au format JSON et comporter un identifiant unique de corrélation par requête utilisateur. Les alertes de criticité haute sont immédiatement relayées sur le canal d'astreinte technique pour une prise en charge sous quinze minutes.

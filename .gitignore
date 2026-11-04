@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Secrets et configuration locale
+.env
+
+# Index et modèles mis en cache
+data/index/*
+!data/index/.gitkeep
+logs/*.log
+logs/*.jsonl
+!logs/.gitkeep
+.pytest_cache/

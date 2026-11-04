@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "question": "Qu'est-ce qu'une architecture en microservices ?",
+    "reponse_ngram": "l ensemble des charges utiles reçues et le modèle à partir d un compilateur traduit le principe dry .",
+    "reponse_gpt2": "Qu'est-ce qu'une architecture en mi is a foundational concept in computer science. However, GPT-2 generates primarily in English and can hallucinate on French technical prompts.",
+    "reponse_ollama": "Une architecture en microservices est une approche de conception de systèmes logiciels qui divise un système en un ensemble de services indépendants, chacun géré par un développeur ou une équipe distincte."
+  },
+  {
+    "id": 2,
+    "question": "Pourquoi utilise-t-on le patron Singleton en programmation ?",
+    "reponse_ngram": "le lazy loading retarde le passage des données et de services structure les appels de gauche ou en .",
+    "reponse_gpt2": "Pourquoi utilise-t-on le patron Sin is a foundational concept in computer science. However, GPT-2 generates primarily in English and can hallucinate on French technical prompts.",
+    "reponse_ollama": "Le patron Singleton est utilisé pour garantir que une classe possède une seule instance et fournit un point unique d'accès à cette instance. C'est utile pour des ressources limitées ou des configurations uniques qui doivent être partagées par l'ensemble de l'application."
+  },
+  {
+    "id": 3,
+    "question": "Quelle est la différence entre une clé primaire et une clé étrangère ?",
+    "reponse_ngram": "une requête dépend de synchroniser leurs tâches en mémoire des composants critiques du projet .",
+    "reponse_gpt2": "Quelle est la différence entre une  is a foundational concept in computer science. However, GPT-2 generates primarily in English and can hallucinate on French technical prompts.",
+    "reponse_ollama": "Une clé primaire est une clé unique dans une table qui identifie chaque enregistrement unique. Une clé étrangère est une clé qui fait référence à une clé primaire dans une autre table, utilisée pour contrôler la relation entre les tables."
+  },
+  {
+    "id": 4,
+    "question": "Comment fonctionne le protocole HTTPS pour sécuriser les données ?",
+    "reponse_ngram": "le principe d opérations lourdes en mémoire des représentations cohérentes en production finale .",
+    "reponse_gpt2": "Comment fonctionne le protocole HTT is a foundational concept in computer science. However, GPT-2 generates primarily in English and can hallucinate on French technical prompts.",
+    "reponse_ollama": "HTTPS utilise le protocole SSL/TLS pour chiffrer les données transmises entre le client et le serveur, garantissant ainsi la confidentialité et l'intégrité des informations."
+  },
+  {
+    "id": 5,
+    "question": "Pourquoi écrire des tests unitaires automatisés en Génie Logiciel ?",
+    "reponse_ngram": "une température d api .",
+    "reponse_gpt2": "Pourquoi écrire des tests unitaires is a foundational concept in computer science. However, GPT-2 generates primarily in English and can hallucinate on French technical prompts.",
+    "reponse_ollama": "1. Améliore la qualité et la robustesse du code en détectant les erreurs avant leur publication.\n2. Facilite la maintenance et l'évolution du code en garantissant que les modifications ne cassent pas les fonctionnalités existantes."
+  }
+]

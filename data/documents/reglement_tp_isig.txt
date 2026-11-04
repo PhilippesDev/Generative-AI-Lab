@@ -1,0 +1,20 @@
+# RÈGLEMENT OFFICIEL DES TRAVAUX PRATIQUES — ISIG GOMA
+Département de Génie Logiciel — Année académique 2026-2027
+
+ARTICLE 1 : DISPOSITIONS GÉNÉRALES
+Les travaux pratiques du cours d'Intelligence Artificielle sont obligatoires pour tous les étudiants inscrits en Licence 3 Génie Logiciel. Ils visent à doter l'étudiant de compétences réelles en implémentation d'algorithmes et d'architectures d'IA générative. Tout étudiant inscrit doit se conformer strictement aux directives académiques de l'enseignant Blaise CIZA.
+
+ARTICLE 2 : CONSTITUTION DES GROUPES ET VARIANTES
+Les travaux pratiques d'IA se font en groupes de cinq étudiants au maximum. Aucun travail individuel n'est autorisé sans dérogation formelle du bureau décanal. Un groupe peut exceptionnellement mélanger des étudiants de filières différentes, à condition de choisir une variante unique et de la déclarer expressément lors du premier rapport. Pour la filière Génie Logiciel, la variante imposée exige la mise en œuvre d'une architecture orientée services avec FastAPI, d'une interface web réactive, d'un banc de 20 tests automatisés avec pytest et de la tenue d'un journal des requêtes.
+
+ARTICLE 3 : ASSIDUITÉ ET PONCTUALITÉ
+La présence physique aux séances de laboratoire à l'ISIG-GOMA est rigoureusement contrôlée au moyen d'une liste d'émargement. Trois retards non justifiés de plus de quinze minutes équivalent à une absence non justifiée. Deux absences non justifiées entraînent automatiquement l'exclusion du groupe et l'attribution de la note zéro pour l'ensemble des TP.
+
+ARTICLE 4 : DÉPÔT DES LIVRABLES ET MODALITÉS D'ÉVALUATION
+Chaque groupe doit remettre à l'échéance fixée : une archive zip contenant le code source intégralement commenté, le fichier requirements.txt, un rapport au format PDF comptant entre 5 et 10 pages agrémenté de captures d'écran, ainsi que l'annexe B relative à la déclaration d'usage de l'intelligence artificielle. Les cinq TP semestriels comptent pour 50 pour cent de la note finale du module, les 50 pour cent restants provenant de la soutenance orale du projet d'agent autonome.
+
+ARTICLE 5 : POLITIQUE ANTI-PLAGIAT ET USAGE DE L'IA
+Le plagiat entre groupes d'étudiants ou la reprise intégrale d'un code source trouvé en ligne sans citation explicite de la source est sanctionné par la note zéro immédiate. L'usage d'outils d'intelligence artificielle est toléré à des fins pédagogiques d'explication, d'aide au débogage ou de relecture stylistique. Toutefois, chaque groupe est tenu de déclarer en annexe B les outils mobilisés, les requêtes soumises et les vérifications indépendantes conduites par les membres.
+
+ARTICLE 6 : MATÉRIEL ET ENVIRONNEMENT EN LABORATOIRE
+Les ordinateurs du laboratoire informatique de l'ISIG fonctionnent sous système d'exploitation Windows 11 avec des environnements virtuels Python 3.10 ou supérieur. L'installation de bibliothèques tierces volumineuses doit obligatoirement être soumise à l'approbation préalable de l'administrateur du réseau académique afin de préserver l'espace disque et la bande passante locale.

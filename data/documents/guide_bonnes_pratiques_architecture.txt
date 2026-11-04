@@ -1,0 +1,25 @@
+# GUIDE DE BONNES PRATIQUES D'ARCHITECTURE ET TESTS LOGICIELS
+Club Génie Logiciel — Fascicule de Référence Technique
+
+1. LES PRINCIPES FONDAMENTAUX DE CONCEPTION SOLID
+L'écriture d'un code robuste et évolutif repose sur le respect des cinq piliers SOLID :
+- Responsabilité Unique : un module ou une classe ne doit posséder qu'une seule raison de changer.
+- Ouvert et Fermé : une entité logicielle doit être ouverte aux extensions mais fermée aux modifications directes.
+- Substitution de Liskov : une sous-classe doit pouvoir être substituée à sa classe mère sans altérer l'exactitude du programme.
+- Ségrégation des Interfaces : il convient de concevoir plusieurs interfaces restreintes et spécialisées plutôt qu'une interface unique surchargée.
+- Inversion des Dépendances : les modules de haut niveau ne doivent pas dépendre des modules de bas niveau, mais tous deux doivent dépendre d'abstractions.
+
+2. PATRONS DE CONCEPTION RECOMMANDÉS
+Pour résoudre les problématiques récurrentes de structure et de comportement, nous préconisons l'usage des patrons éprouvés :
+- Le patron Fabrique sépare la création des objets de leur utilisation métier, facilitant l'injection de dépendances.
+- Le patron Observateur permet d'établir une communication découplée de type un-à-plusieurs lors de la survenue d'événements asynchrones.
+- Le patron Stratégie encapsule des familles d'algorithmes interchangeables au moment de l'exécution, très utile pour basculer entre la recherche TF-IDF et la recherche par embeddings.
+
+3. PYRAMIDE DES TESTS LOGICIELS
+Une stratégie de qualification efficace équilibre les efforts de vérification selon trois niveaux :
+- La base de la pyramide est constituée de tests unitaires rapides et isolés, couvrant au minimum soixante-dix pour cent de la logique métier.
+- Le niveau intermédiaire regroupe les tests d'intégration qui vérifient la conformité des interactions entre la base de données, les API tierces et le serveur d'application.
+- Le sommet de la pyramide comprend les tests de bout en bout qui automatisent des scénarios d'usage réels à travers l'interface utilisateur.
+
+4. GESTION DES DONNÉES ET CACHES DE HAUTE PERFORMANCE
+L'utilisation judicieuse d'une couche de mémoire cache comme Redis permet de soulager le serveur de base de données relationnelle PostgreSQL. Les données statiques ou fréquemment consultées font l'objet d'une mise en cache avec un temps d'expiration adapté afin de préserver la fraîcheur des informations sans pénaliser la latence globale.

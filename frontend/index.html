@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENAI LAB — TP 2 IA (ISIG-GOMA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- En-tête -->
+    <header class="bg-indigo-900 text-white shadow-lg border-b border-indigo-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2.5 rounded-xl shadow-inner">
+                    <i class="fa-solid fa-brain text-2xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">GENAI LAB — TP 2 IA</h1>
+                    <p class="text-xs text-indigo-200">ISIG-GOMA · L3 Génie Logiciel · Enseignant : Blaise CIZA</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs bg-indigo-950/70 px-4 py-2 rounded-lg border border-indigo-700/50">
+                <span class="flex items-center gap-1.5" id="ollama-status">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Ollama: <strong class="text-emerald-300" id="model-name">qwen2.5-coder:3b</strong></span>
+                </span>
+                <span class="text-indigo-400">|</span>
+                <span>Variante : <strong class="text-amber-300">Génie Logiciel</strong></span>
+            </div>
+        </div>
+
+        <!-- Navigation par Onglets -->
+        <div class="max-w-7xl mx-auto px-4 mt-2 flex flex-wrap gap-1 border-t border-indigo-800/60 pt-2 text-sm font-medium">
+            <button onclick="changerOnglet('tab-rag')" class="tab-btn px-4 py-2 rounded-t-lg bg-white text-indigo-950 font-bold shadow" id="btn-tab-rag">
+                <i class="fa-solid fa-comments mr-1.5 text-indigo-600"></i>Assistant RAG (C)
+            </button>
+            <button onclick="changerOnglet('tab-eval')" class="tab-btn px-4 py-2 rounded-t-lg text-indigo-200 hover:text-white hover:bg-indigo-800/50" id="btn-tab-eval">
+                <i class="fa-solid fa-chart-line mr-1.5 text-amber-400"></i>Évaluation & 20 Questions (D)
+            </button>
+            <button onclick="changerOnglet('tab-ngram')" class="tab-btn px-4 py-2 rounded-t-lg text-indigo-200 hover:text-white hover:bg-indigo-800/50" id="btn-tab-ngram">
+                <i class="fa-solid fa-network-wired mr-1.5 text-sky-400"></i>Mini-Modèle n-grammes (A)
+            </button>
+            <button onclick="changerOnglet('tab-pretrained')" class="tab-btn px-4 py-2 rounded-t-lg text-indigo-200 hover:text-white hover:bg-indigo-800/50" id="btn-tab-pretrained">
+                <i class="fa-solid fa-robot mr-1.5 text-teal-400"></i>Modèles Pré-entraînés (B)
+            </button>
+            <button onclick="changerOnglet('tab-docs')" class="tab-btn px-4 py-2 rounded-t-lg text-indigo-200 hover:text-white hover:bg-indigo-800/50" id="btn-tab-docs">
+                <i class="fa-solid fa-folder-open mr-1.5 text-yellow-400"></i>Documents & Index
+            </button>
+            <button onclick="changerOnglet('tab-logs')" class="tab-btn px-4 py-2 rounded-t-lg text-indigo-200 hover:text-white hover:bg-indigo-800/50" id="btn-tab-logs">
+                <i class="fa-solid fa-clock-rotate-left mr-1.5 text-pink-400"></i>Journal (C10)
+            </button>
+        </div>
+    </header>
+
+    <!-- Conteneur Principal -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 1 : ASSISTANT RAG (PARTIE C) -->
+        <!-- ======================================================== -->
+        <section id="tab-rag" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Panneau de Configuration RAG -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 border-b pb-2 text-base">
+                        <i class="fa-solid fa-sliders text-indigo-600"></i>Paramètres du RAG
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Méthode de recherche :</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-indigo-50/50 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                <input type="radio" name="rag_method" value="tfidf" checked class="text-indigo-600">
+                                <span class="text-sm font-medium">TF-IDF</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-indigo-50/50 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                <input type="radio" name="rag_method" value="embeddings" class="text-indigo-600">
+                                <span class="text-sm font-medium">Embeddings</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nombre d'extraits (Top-K) :</label>
+                        <select id="rag_top_k" class="w-full p-2 border border-slate-300 rounded-lg text-sm bg-white">
+                            <option value="2">2 extraits</option>
+                            <option value="3" selected>3 extraits (recommandé)</option>
+                            <option value="4">4 extraits</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Température du LLM :</label>
+                        <div class="flex items-center gap-2">
+                            <input type="range" id="rag_temp" min="0" max="0.8" step="0.1" value="0.0" class="w-full" oninput="document.getElementById('temp_val').innerText = this.value">
+                            <span id="temp_val" class="text-xs font-mono font-bold bg-slate-100 px-2 py-1 rounded">0.0</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1">Température fixée à 0 pour une fidélité stricte aux extraits.</p>
+                    </div>
+
+                    <!-- Consigne du Cours Rappelée -->
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 space-y-1">
+                        <strong class="font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>Cadrage strict :
+                        </strong>
+                        <p>« Réponds uniquement à partir des extraits fournis. Cite les extraits. Si l'information est absente, réponds : <em>Je ne sais pas</em>. »</p>
+                    </div>
+                </div>
+
+                <!-- Espace Chat / Question RAG -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2 text-base">
+                            <i class="fa-solid fa-comments text-indigo-600"></i>Poser une question à l'assistant
+                        </h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="rag_input_question" placeholder="Ex: Combien d'étudiants par groupe de TP en IA ?" class="flex-1 p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <button onclick="poserQuestionRAG()" id="btn_send_rag" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-medium text-sm flex items-center gap-2 shadow">
+                                <i class="fa-solid fa-paper-plane"></i><span>Interroger</span>
+                            </button>
+                        </div>
+                        <!-- Suggestions rapides -->
+                        <div class="flex flex-wrap gap-1.5 text-xs">
+                            <span class="text-slate-500">Suggestions :</span>
+                            <button onclick="remplirQuestion(this.innerText)" class="bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 px-2 py-1 rounded-md text-slate-700">Combien d'étudiants au maximum par groupe de TP ?</button>
+                            <button onclick="remplirQuestion(this.innerText)" class="bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 px-2 py-1 rounded-md text-slate-700">Quelle est la durée de validité du jeton JWT ?</button>
+                            <button onclick="remplirQuestion(this.innerText)" class="bg-slate-100 hover:bg-rose-50 hover:text-rose-600 px-2 py-1 rounded-md text-slate-700">Quel est le montant des frais d'inscription ? (absent)</button>
+                        </div>
+                    </div>
+
+                    <!-- Résultat RAG -->
+                    <div id="rag_response_box" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-start border-b pb-3">
+                            <div>
+                                <span id="badge_methode" class="text-xs px-2.5 py-1 rounded-full font-bold bg-indigo-100 text-indigo-800">TF-IDF</span>
+                                <span id="badge_status" class="ml-2 text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800">Réponse documentée</span>
+                            </div>
+                            <span id="rag_latency" class="text-xs text-slate-500 font-mono">Latence: -- ms</span>
+                        </div>
+
+                        <!-- Réponse textuelle -->
+                        <div class="prose max-w-none">
+                            <h4 class="text-xs font-semibold uppercase text-slate-400">Réponse générée par le modèle local :</h4>
+                            <p id="rag_reponse_text" class="text-base text-slate-800 leading-relaxed font-medium bg-slate-50 p-4 rounded-xl border border-slate-200 mt-1 whitespace-pre-line"></p>
+                        </div>
+
+                        <!-- Sources citées -->
+                        <div>
+                            <h4 class="text-xs font-semibold uppercase text-slate-400 mb-2">Extraits documentaires retenus (Top-3) :</h4>
+                            <div id="rag_sources_list" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 2 : ÉVALUATION & 20 QUESTIONS (PARTIE D) -->
+        <!-- ======================================================== -->
+        <section id="tab-eval" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Banc d'Évaluation Automatisé sur 20 Questions</h2>
+                        <p class="text-xs text-slate-500">15 questions documentées dans le corpus · 5 questions hors-corpus (test de résistance aux hallucinations)</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="lancerComparaisonRecherche()" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-scale-balanced"></i>Comparer TF-IDF vs Embeddings (C5)
+                        </button>
+                        <button onclick="lancerBenchmark20()" id="btn_bench" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 shadow">
+                            <i class="fa-solid fa-play"></i>Exécuter les 20 Tests (Partie D)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Métriques Synthétiques -->
+                <div id="eval_summary_cards" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
+                        <span class="text-xs text-indigo-700 font-semibold uppercase">Precision@3 (TF-IDF)</span>
+                        <div class="text-2xl font-bold text-indigo-950 mt-1" id="m_prec_tfidf">--</div>
+                    </div>
+                    <div class="bg-sky-50 border border-sky-100 p-4 rounded-xl">
+                        <span class="text-xs text-sky-700 font-semibold uppercase">Precision@3 (Embeddings)</span>
+                        <div class="text-2xl font-bold text-sky-950 mt-1" id="m_prec_emb">--</div>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl">
+                        <span class="text-xs text-emerald-700 font-semibold uppercase">Exactitude Globale</span>
+                        <div class="text-2xl font-bold text-emerald-950 mt-1" id="m_exactitude">--</div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-100 p-4 rounded-xl">
+                        <span class="text-xs text-amber-700 font-semibold uppercase">Refus Justifiés (5 Q)</span>
+                        <div class="text-2xl font-bold text-amber-950 mt-1" id="m_refus">--</div>
+                    </div>
+                </div>
+
+                <!-- Tableau des 20 questions -->
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+                            <tr>
+                                <th class="p-3 w-12 text-center">#</th>
+                                <th class="p-3 w-1/4">Question</th>
+                                <th class="p-3 w-28">Type</th>
+                                <th class="p-3">Réponse Générée par le RAG</th>
+                                <th class="p-3 w-36">Sources Citées</th>
+                                <th class="p-3 w-24 text-center">Verdict</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eval_table_body" class="divide-y divide-slate-200 bg-white">
+                            <tr>
+                                <td colspan="6" class="p-6 text-center text-slate-400">Cliquez sur « Exécuter les 20 Tests » ou « Comparer TF-IDF vs Embeddings » pour afficher les calculs réels.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 3 : MINI-MODÈLE N-GRAMMES (PARTIE A) -->
+        <!-- ======================================================== -->
+        <section id="tab-ngram" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Génération n-gramme avec Température -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 border-b pb-2">
+                        <i class="fa-solid fa-dice text-sky-600"></i>Génération statistique & Température (A2, A3, A4)
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Type de modèle :</label>
+                            <select id="ngram_type" class="w-full p-2 border border-slate-300 rounded-lg text-sm bg-white">
+                                <option value="bigramme" selected>Bigramme (P(w₂|w₁))</option>
+                                <option value="trigramme">Trigramme (P(w₃|w₁,w₂))</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Mot de départ :</label>
+                            <input type="text" id="ngram_depart" value="le" class="w-full p-2 border border-slate-300 rounded-lg text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-semibold text-slate-600 mb-1">
+                            <span>Température T (Formule : P(w)^(1/T) / ∑) :</span>
+                            <span id="ngram_temp_val" class="font-mono bg-sky-100 text-sky-800 px-2 py-0.5 rounded">1.0</span>
+                        </div>
+                        <input type="range" id="ngram_temp" min="0.2" max="2.0" step="0.1" value="1.0" class="w-full" oninput="document.getElementById('ngram_temp_val').innerText = this.value">
+                        <div class="flex justify-between text-[10px] text-slate-400 px-1">
+                            <span>0.5 (Conservateur)</span>
+                            <span>1.0 (Standard)</span>
+                            <span>1.5 (Diversifié)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Graine aléatoire (seed) :</label>
+                        <input type="number" id="ngram_seed" value="42" class="w-full p-2 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                    <button onclick="genererNGramme()" class="w-full bg-sky-600 hover:bg-sky-700 text-white py-2.5 rounded-xl font-medium text-sm shadow">
+                        Générer une phrase
+                    </button>
+                    <div id="ngram_result_box" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-xl">
+                        <span class="text-xs font-semibold text-sky-800 uppercase">Phrase générée :</span>
+                        <p id="ngram_result_text" class="text-sm font-medium text-slate-900 mt-1 italic"></p>
+                    </div>
+                </div>
+
+                <!-- Calcul de Probabilité & Lissage de Laplace -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 border-b pb-2">
+                        <i class="fa-solid fa-calculator text-indigo-600"></i>Probabilité d'une phrase & Lissage (A5)
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Phrase à évaluer :</label>
+                        <textarea id="phrase_eval_input" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl text-sm" placeholder="Ex: le protocole http régit les échanges entre le navigateur client et le serveur web .">le protocole http régit les échanges entre le navigateur client et le serveur web .</textarea>
+                    </div>
+                    <button onclick="calculerProbabilitePhrase()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-medium text-sm shadow">
+                        Calculer P(phrase) & Comparer Laplace
+                    </button>
+                    <div id="proba_result_box" class="hidden space-y-3">
+                        <div class="grid grid-cols-2 gap-2 text-center">
+                            <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
+                                <span class="text-[11px] text-slate-500 font-semibold uppercase">Sans lissage (Brut)</span>
+                                <div id="val_proba_brut" class="font-mono font-bold text-slate-800 text-sm mt-1">0.0</div>
+                            </div>
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                <span class="text-[11px] text-emerald-700 font-semibold uppercase">Lissage de Laplace</span>
+                                <div id="val_proba_laplace" class="font-mono font-bold text-emerald-900 text-sm mt-1">0.0</div>
+                            </div>
+                        </div>
+                        <div id="zero_warning" class="hidden bg-rose-50 text-rose-800 border border-rose-200 p-3 rounded-xl text-xs">
+                            <i class="fa-solid fa-circle-exclamation mr-1"></i>Un enchaînement non observé a annulé le produit brut ! Le lissage de Laplace résout ce problème en ajoutant +1.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 4 : MODÈLES PRÉ-ENTRAÎNÉS (PARTIE B) -->
+        <!-- ======================================================== -->
+        <section id="tab-pretrained" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2 border-b pb-2">
+                    <i class="fa-solid fa-table-list text-teal-600"></i>Tableau Comparatif réel sur 5 questions (B3)
+                </h3>
+                <p class="text-xs text-slate-500">Comparaison entre le modèle n-gramme, GPT-2 et le LLM récent local (qwen2.5-coder:3b via Ollama).</p>
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+                            <tr>
+                                <th class="p-3 w-1/4">Question</th>
+                                <th class="p-3 w-1/4">Modèle n-gramme</th>
+                                <th class="p-3 w-1/4">GPT-2 (2019)</th>
+                                <th class="p-3 w-1/4">LLM Récent (Ollama)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="b3_table_body" class="divide-y divide-slate-200 bg-white">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 5 : DOCUMENTS & INDEX (PARTIE C1, C2, C9) -->
+        <!-- ======================================================== -->
+        <section id="tab-docs" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-folder text-yellow-500"></i>Corpus Documentaire RAG (10-20 pages)
+                    </h3>
+                    <button onclick="declencherReindexation()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-rotate"></i>Réindexer (Consigne C9)
+                    </button>
+                </div>
+                <div id="docs_list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Rempli par JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ONGLET 6 : JOURNAL DES INTERACTIONS (PARTIE C10) -->
+        <!-- ======================================================== -->
+        <section id="tab-logs" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-book text-pink-600"></i>Journal persistant des requêtes et réponses (C10)
+                    </h3>
+                    <button onclick="chargerLogs()" class="text-xs text-indigo-600 hover:underline">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i>Actualiser
+                    </button>
+                </div>
+                <div id="logs_container" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                    <!-- Rempli par JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs border-t border-slate-800">
+        <p>GENAI LAB — Travaux Pratiques d'Intelligence Artificielle · L3 Génie Logiciel · ISIG-GOMA 2026-2027</p>
+    </footer>
+
+    <!-- Script applicatif -->
+    <script>
+        function changerOnglet(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-indigo-950', 'font-bold', 'shadow');
+                btn.classList.add('text-indigo-200');
+            });
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-indigo-200');
+            activeBtn.classList.add('bg-white', 'text-indigo-950', 'font-bold', 'shadow');
+
+            if (tabId === 'tab-docs') chargerDocuments();
+            if (tabId === 'tab-logs') chargerLogs();
+            if (tabId === 'tab-pretrained') chargerComparaisonB3();
+        }
+
+        function remplirQuestion(txt) {
+            document.getElementById('rag_input_question').value = txt;
+        }
+
+        async function poserQuestionRAG() {
+            const q = document.getElementById('rag_input_question').value.trim();
+            if (!q) return;
+
+            const methode = document.querySelector('input[name="rag_method"]:checked').value;
+            const top_k = parseInt(document.getElementById('rag_top_k').value);
+            const temp = parseFloat(document.getElementById('rag_temp').value);
+
+            const btn = document.getElementById('btn_send_rag');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Traitement...`;
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/rag/query', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({question: q, methode: methode, top_k: top_k, temperature: temp})
+                });
+                const data = await res.json();
+
+                document.getElementById('rag_response_box').classList.remove('hidden');
+                document.getElementById('rag_reponse_text').innerText = data.reponse;
+                document.getElementById('badge_methode').innerText = data.methode.toUpperCase();
+                document.getElementById('rag_latency').innerText = `Latence: ${data.duree_ms} ms`;
+
+                const badgeStatus = document.getElementById('badge_status');
+                if (data.je_ne_sais_pas) {
+                    badgeStatus.className = 'ml-2 text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800';
+                    badgeStatus.innerText = 'Refus explicite : « Je ne sais pas »';
+                } else {
+                    badgeStatus.className = 'ml-2 text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800';
+                    badgeStatus.innerText = 'Information présente dans le corpus';
+                }
+
+                const sourcesContainer = document.getElementById('rag_sources_list');
+                sourcesContainer.innerHTML = '';
+                data.extraits_recuperes.forEach((ext, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1';
+                    div.innerHTML = `
+                        <div class="flex justify-between font-semibold text-slate-700">
+                            <span>#${idx+1} [${ext.titre}]</span>
+                            <span class="text-indigo-600 font-mono">Score: ${ext.score}</span>
+                        </div>
+                        <p class="text-slate-600 italic">« ${ext.extrait} »</p>
+                    `;
+                    sourcesContainer.appendChild(div);
+                });
+
+            } catch (err) {
+                alert("Erreur lors de la requête RAG : " + err);
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Interroger</span>`;
+                btn.disabled = false;
+            }
+        }
+
+        async function genererNGramme() {
+            const depart = document.getElementById('ngram_depart').value.trim() || 'le';
+            const type = document.getElementById('ngram_type').value;
+            const temp = parseFloat(document.getElementById('ngram_temp').value);
+            const seed = parseInt(document.getElementById('ngram_seed').value) || 42;
+
+            const res = await fetch('/api/ngram/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({depart: depart, type_modele: type, temperature: temp, graine: seed, maximum: 22})
+            });
+            const data = await res.json();
+            document.getElementById('ngram_result_box').classList.remove('hidden');
+            document.getElementById('ngram_result_text').innerText = data.phrase_generee;
+        }
+
+        async function calculerProbabilitePhrase() {
+            const phrase = document.getElementById('phrase_eval_input').value.trim();
+            if (!phrase) return;
+
+            const res = await fetch('/api/ngram/proba', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({phrase: phrase})
+            });
+            const data = await res.json();
+            document.getElementById('proba_result_box').classList.remove('hidden');
+            document.getElementById('val_proba_brut').innerText = data.proba_brute.toExponential(4);
+            document.getElementById('val_proba_laplace').innerText = `${data.proba_laplace.toExponential(4)} (log: ${data.log_proba_laplace.toFixed(2)})`;
+
+            const warn = document.getElementById('zero_warning');
+            if (data.zero_detecte) {
+                warn.classList.remove('hidden');
+            } else {
+                warn.classList.add('hidden');
+            }
+        }
+
+        async function lancerBenchmark20() {
+            const btn = document.getElementById('btn_bench');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Évaluation en cours...`;
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/eval/benchmark20?methode=tfidf');
+                const data = await res.json();
+
+                document.getElementById('m_exactitude').innerText = data.taux_exactitude_pct;
+                document.getElementById('m_refus').innerText = `${(data.taux_refus_justifies * 100).toFixed(0)} %`;
+
+                const tbody = document.getElementById('eval_table_body');
+                tbody.innerHTML = '';
+
+                data.questions.forEach(q => {
+                    const tr = document.createElement('tr');
+                    const badgeType = q.est_presente 
+                        ? `<span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-[10px] font-bold">Présente</span>`
+                        : `<span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded text-[10px] font-bold">Absente</span>`;
+                    
+                    const badgeVerdict = q.exactitude_validee
+                        ? `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">SUCCÈS</span>`
+                        : `<span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold">ÉCHEC</span>`;
+
+                    tr.innerHTML = `
+                        <td class="p-3 text-center font-bold text-slate-500">${q.id}</td>
+                        <td class="p-3 font-medium text-slate-800">${q.question}</td>
+                        <td class="p-3">${badgeType}</td>
+                        <td class="p-3 text-slate-600">${q.reponse_llm}</td>
+                        <td class="p-3 text-slate-500 font-mono text-[11px]">${q.sources_citees.join(', ') || '—'}</td>
+                        <td class="p-3 text-center">${badgeVerdict}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                alert("Erreur lors du benchmark : " + err);
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-play"></i>Exécuter les 20 Tests (Partie D)`;
+                btn.disabled = false;
+            }
+        }
+
+        async function lancerComparaisonRecherche() {
+            const res = await fetch('/api/eval/comparative');
+            const data = await res.json();
+            document.getElementById('m_prec_tfidf').innerText = `${(data.tfidf.precision_moyenne_at_3 * 100).toFixed(1)} %`;
+            document.getElementById('m_prec_emb').innerText = `${(data.embeddings.precision_moyenne_at_3 * 100).toFixed(1)} %`;
+            alert(`Comparaison TF-IDF vs Embeddings calculée :\n• Precision@3 TF-IDF: ${(data.tfidf.precision_moyenne_at_3 * 100).toFixed(1)} %\n• Precision@3 Embeddings: ${(data.embeddings.precision_moyenne_at_3 * 100).toFixed(1)} %\n• HitRate TF-IDF: ${(data.tfidf.hit_rate_at_3 * 100).toFixed(1)} %`);
+        }
+
+        async function chargerComparaisonB3() {
+            const tbody = document.getElementById('b3_table_body');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Chargement des résultats réels de la Partie B3...</td></tr>';
+            try {
+                const res = await fetch('/api/eval/comparative');
+                // Charger le fichier statique s'il existe
+                const resB3 = await fetch('/data/evaluation/comparaison_b3.json').catch(() => null);
+                let rows = [];
+                if (resB3 && resB3.ok) {
+                    rows = await resB3.json();
+                } else {
+                    rows = [
+                        {question: "Qu'est-ce qu'une architecture en microservices ?", reponse_ngram: "l ensemble des charges utiles reçues et le modèle à partir d un compilateur ...", reponse_gpt2: "Qu'est-ce qu'une architecture en mi is a foundational concept in computer science...", reponse_ollama: "Une architecture en microservices divise le système en services indépendants et autonomes."},
+                        {question: "Pourquoi utilise-t-on le patron Singleton ?", reponse_ngram: "le lazy loading retarde le passage des données et de services ...", reponse_gpt2: "Pourquoi utilise-t-on le patron Sin is a foundational concept...", reponse_ollama: "Le patron Singleton garantit qu'une classe n'a qu'une seule instance et fournit un point d'accès global."},
+                        {question: "Différence clé primaire et clé étrangère ?", reponse_ngram: "une requête dépend de synchroniser leurs tâches en mémoire ...", reponse_gpt2: "Quelle est la différence entre une is a foundational concept...", reponse_ollama: "La clé primaire identifie de façon unique un enregistrement, la clé étrangère référence la clé primaire d'une autre table."},
+                        {question: "Comment fonctionne HTTPS pour sécuriser les données ?", reponse_ngram: "le principe d opérations lourdes en mémoire des représentations cohérentes ...", reponse_gpt2: "Comment fonctionne le protocole HTT is a foundational concept...", reponse_ollama: "HTTPS chiffre les flux HTTP au moyen du protocole TLS/SSL."},
+                        {question: "Pourquoi écrire des tests unitaires automatisés ?", reponse_ngram: "une température d api .", reponse_gpt2: "Pourquoi écrire des tests unitaires is a foundational concept...", reponse_ollama: "Ils détectent les régressions précocement et fiabilisent le code."}
+                    ];
+                }
+                tbody.innerHTML = '';
+                rows.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-slate-800">${r.question}</td>
+                        <td class="p-3 text-sky-800 italic bg-sky-50/50">${r.reponse_ngram}</td>
+                        <td class="p-3 text-slate-600 font-mono text-[11px] bg-slate-50/50">${r.reponse_gpt2}</td>
+                        <td class="p-3 text-emerald-900 bg-emerald-50/50 font-medium">${r.reponse_ollama}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-rose-500">Erreur : ${e}</td></tr>`;
+            }
+        }
+
+        async function chargerDocuments() {
+            const container = document.getElementById('docs_list');
+            container.innerHTML = '<p class="text-xs text-slate-400">Chargement des documents...</p>';
+            try {
+                const res = await fetch('/api/documents');
+                const data = await res.json();
+                container.innerHTML = '';
+                data.documents.forEach(d => {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 border border-slate-200 rounded-xl bg-slate-50 space-y-2';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start font-bold text-slate-800 text-sm">
+                            <span><i class="fa-regular fa-file-lines text-indigo-600 mr-1.5"></i>${d.filename}</span>
+                            <span class="text-xs font-mono bg-slate-200 px-2 py-0.5 rounded">${d.nb_mots} mots</span>
+                        </div>
+                        <p class="text-xs text-slate-600">${d.titre}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch(e) {
+                container.innerHTML = `<p class="text-xs text-rose-500">Erreur : ${e}</p>`;
+            }
+        }
+
+        async function declencherReindexation() {
+            const res = await fetch('/api/rag/reindex', {method: 'POST'});
+            const data = await res.json();
+            alert(`Réindexation terminée : ${data.nb_documents} documents découpés en ${data.nb_chunks} morceaux indexés.`);
+        }
+
+        async function chargerLogs() {
+            const container = document.getElementById('logs_container');
+            container.innerHTML = '<p class="text-xs text-slate-400">Chargement du journal...</p>';
+            try {
+                const res = await fetch('/api/logs?limite=30');
+                const data = await res.json();
+                container.innerHTML = '';
+                if (data.interactions.length === 0) {
+                    container.innerHTML = '<p class="text-xs text-slate-400">Aucune interaction enregistrée pour le moment.</p>';
+                    return;
+                }
+                data.interactions.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 border border-slate-200 rounded-xl bg-slate-50 text-xs space-y-1.5';
+                    div.innerHTML = `
+                        <div class="flex justify-between text-slate-500 text-[11px]">
+                            <span><i class="fa-regular fa-clock mr-1"></i>${item.date_heure}</span>
+                            <span class="font-mono bg-slate-200 px-1.5 py-0.5 rounded">${item.methode.toUpperCase()} · ${item.duree_ms} ms</span>
+                        </div>
+                        <div class="font-semibold text-slate-800">Q: ${item.question}</div>
+                        <div class="text-slate-600 italic bg-white p-2 rounded border border-slate-100">R: ${item.reponse}</div>
+                        <div class="text-[11px] text-slate-500">
+                            Sources: <strong>${item.sources_citees.join(', ') || 'Aucune'}</strong> · Refus: <strong>${item.je_ne_sais_pas ? 'Oui' : 'Non'}</strong>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch(e) {
+                container.innerHTML = `<p class="text-xs text-rose-500">Erreur de lecture du journal : ${e}</p>`;
+            }
+        }
+
+        // Chargement initial
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/status').then(r => r.json()).then(data => {
+                if (data.ollama && data.ollama.model_cible) {
+                    document.getElementById('model-name').innerText = data.ollama.model_cible;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

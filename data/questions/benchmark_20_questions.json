@@ -1,0 +1,238 @@
+[
+  {
+    "id": 1,
+    "question": "Combien d'étudiants au maximum peuvent composer un groupe de TP en IA ?",
+    "reponse_attendue": "Un groupe de TP est composé de 5 étudiants au maximum.",
+    "est_presente": true,
+    "source_attendue": "reglement_tp_isig.txt",
+    "mots_cles": [
+      "groupe",
+      "étudiants",
+      "maximum",
+      "5",
+      "cinq"
+    ]
+  },
+  {
+    "id": 2,
+    "question": "Quelle est la pénalité pour deux absences non justifiées aux séances de TP ?",
+    "reponse_attendue": "Deux absences non justifiées entraînent l'exclusion du groupe et l'attribution de la note zéro pour l'ensemble des TP.",
+    "est_presente": true,
+    "source_attendue": "reglement_tp_isig.txt",
+    "mots_cles": [
+      "absence",
+      "exclusion",
+      "zéro",
+      "note"
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Quel pourcentage de la note finale du module représentent les cinq travaux pratiques ?",
+    "reponse_attendue": "Les cinq TP comptent pour 50 pour cent de la note finale du module.",
+    "est_presente": true,
+    "source_attendue": "reglement_tp_isig.txt",
+    "mots_cles": [
+      "50",
+      "pour cent",
+      "note finale"
+    ]
+  },
+  {
+    "id": 4,
+    "question": "Quel est le nombre de pages exigé pour le rapport PDF à remettre ?",
+    "reponse_attendue": "Le rapport PDF doit compter entre 5 et 10 pages.",
+    "est_presente": true,
+    "source_attendue": "reglement_tp_isig.txt",
+    "mots_cles": [
+      "5 et 10 pages",
+      "rapport",
+      "PDF"
+    ]
+  },
+  {
+    "id": 5,
+    "question": "Quelles sont les exigences imposées pour la variante de la filière Génie Logiciel ?",
+    "reponse_attendue": "FastAPI, une interface web, 20 tests automatiques pytest et un journal des requêtes.",
+    "est_presente": true,
+    "source_attendue": "reglement_tp_isig.txt",
+    "mots_cles": [
+      "FastAPI",
+      "interface web",
+      "tests",
+      "journal"
+    ]
+  },
+  {
+    "id": 6,
+    "question": "À quoi correspond la branche 'main' dans la procédure Gitflow appliquée ?",
+    "reponse_attendue": "La branche 'main' reflète en permanence l'état déployé en environnement de production.",
+    "est_presente": true,
+    "source_attendue": "procedure_deploiement_devops.txt",
+    "mots_cles": [
+      "main",
+      "production",
+      "déployé"
+    ]
+  },
+  {
+    "id": 7,
+    "question": "Quel seuil minimal de couverture de code est exigé pour autoriser le déploiement ?",
+    "reponse_attendue": "Un seuil minimal de 80 pour cent de couverture des instructions est exigé.",
+    "est_presente": true,
+    "source_attendue": "procedure_deploiement_devops.txt",
+    "mots_cles": [
+      "80",
+      "pour cent",
+      "couverture"
+    ]
+  },
+  {
+    "id": 8,
+    "question": "En combien de temps le mécanisme de rollback automatisé restaure-t-il la version précédente ?",
+    "reponse_attendue": "Le rollback automatisé restaure la version précédente sous un délai maximal de 90 secondes.",
+    "est_presente": true,
+    "source_attendue": "procedure_deploiement_devops.txt",
+    "mots_cles": [
+      "90 secondes",
+      "quatre-vingt-dix",
+      "rollback"
+    ]
+  },
+  {
+    "id": 9,
+    "question": "Quels outils sont utilisés pour collecter et visualiser les métriques de supervision ?",
+    "reponse_attendue": "Prometheus pour la collecte des métriques et Grafana pour la visualisation des tableaux de bord.",
+    "est_presente": true,
+    "source_attendue": "procedure_deploiement_devops.txt",
+    "mots_cles": [
+      "Prometheus",
+      "Grafana"
+    ]
+  },
+  {
+    "id": 10,
+    "question": "Quelle est la durée de validité d'un jeton d'accès JWT pour l'API REST ?",
+    "reponse_attendue": "La durée de validité d'un jeton d'accès est fixée à 60 minutes.",
+    "est_presente": true,
+    "source_attendue": "spec_api_gestion_etudiants.txt",
+    "mots_cles": [
+      "60 minutes",
+      "soixante",
+      "jeton"
+    ]
+  },
+  {
+    "id": 11,
+    "question": "Quel est le plafond de requêtes autorisé par minute pour un utilisateur non authentifié ?",
+    "reponse_attendue": "Le plafond est de 100 requêtes par minute et par adresse IP.",
+    "est_presente": true,
+    "source_attendue": "spec_api_gestion_etudiants.txt",
+    "mots_cles": [
+      "100 requêtes",
+      "cent",
+      "minute"
+    ]
+  },
+  {
+    "id": 12,
+    "question": "Quel code de statut HTTP est retourné lorsqu'un nouvel étudiant est créé avec succès via POST ?",
+    "reponse_attendue": "L'API renvoie le code HTTP 201 Created.",
+    "est_presente": true,
+    "source_attendue": "spec_api_gestion_etudiants.txt",
+    "mots_cles": [
+      "201",
+      "Created"
+    ]
+  },
+  {
+    "id": 13,
+    "question": "Que stipule le principe de responsabilité unique dans les principes SOLID ?",
+    "reponse_attendue": "Un module ou une classe ne doit posséder qu'une seule raison de changer.",
+    "est_presente": true,
+    "source_attendue": "guide_bonnes_pratiques_architecture.txt",
+    "mots_cles": [
+      "responsabilité unique",
+      "seule raison de changer"
+    ]
+  },
+  {
+    "id": 14,
+    "question": "Quel patron de conception permet d'alterner entre la recherche TF-IDF et les embeddings au moment de l'exécution ?",
+    "reponse_attendue": "Le patron Stratégie (Strategy Pattern).",
+    "est_presente": true,
+    "source_attendue": "guide_bonnes_pratiques_architecture.txt",
+    "mots_cles": [
+      "Stratégie",
+      "Strategy"
+    ]
+  },
+  {
+    "id": 15,
+    "question": "Quel pourcentage minimal de la logique métier doit être couvert par les tests unitaires selon la pyramide des tests ?",
+    "reponse_attendue": "Les tests unitaires doivent couvrir au minimum 70 pour cent de la logique métier.",
+    "est_presente": true,
+    "source_attendue": "guide_bonnes_pratiques_architecture.txt",
+    "mots_cles": [
+      "70",
+      "pour cent",
+      "tests unitaires"
+    ]
+  },
+  {
+    "id": 16,
+    "question": "Quel est le montant exact des frais d'inscription académique à l'ISIG-GOMA pour l'année 2026-2027 ?",
+    "reponse_attendue": "Je ne sais pas.",
+    "est_presente": false,
+    "source_attendue": null,
+    "mots_cles": [
+      "frais d'inscription",
+      "montant"
+    ]
+  },
+  {
+    "id": 17,
+    "question": "Quelle est l'adresse physique du campus principal de l'ISIG dans la ville de Goma ?",
+    "reponse_attendue": "Je ne sais pas.",
+    "est_presente": false,
+    "source_attendue": null,
+    "mots_cles": [
+      "adresse physique",
+      "quartier"
+    ]
+  },
+  {
+    "id": 18,
+    "question": "Quel est le nom du recteur ou du directeur général actuel de l'ISIG-GOMA ?",
+    "reponse_attendue": "Je ne sais pas.",
+    "est_presente": false,
+    "source_attendue": null,
+    "mots_cles": [
+      "directeur général",
+      "recteur"
+    ]
+  },
+  {
+    "id": 19,
+    "question": "À quelle heure ferme la bibliothèque universitaire le samedi après-midi ?",
+    "reponse_attendue": "Je ne sais pas.",
+    "est_presente": false,
+    "source_attendue": null,
+    "mots_cles": [
+      "bibliothèque",
+      "samedi"
+    ]
+  },
+  {
+    "id": 20,
+    "question": "Quel est le débit garanti de la connexion fibre optique souscrite auprès de l'opérateur Airtel ?",
+    "reponse_attendue": "Je ne sais pas.",
+    "est_presente": false,
+    "source_attendue": null,
+    "mots_cles": [
+      "fibre",
+      "débit",
+      "Airtel"
+    ]
+  }
+]
